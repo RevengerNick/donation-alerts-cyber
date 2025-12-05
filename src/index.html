@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>CP77 STREAM LINK</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="header">
+        <div class="header-title">
+            <h1 data-i18n="title">CP77 INTEGRATION TOOL</h1>
+        </div>
+        <div class="header-controls">
+            <button class="btn-settings" id="btn-settings" data-i18n="btn_config">[ SYSTEM CONFIG ]</button>
+            <div class="window-controls">
+                <button id="btn-min" class="win-btn">─</button>
+                <button id="btn-close" class="win-btn btn-close">✕</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="left-panel">
+            <div class="config-box">
+                <div class="section-title" data-i18n="sec_connection">CONNECTION LINK</div>
+                
+                <label>DonationAlerts Token</label>
+                <input type="password" id="token" placeholder="Paste Token Here..." oninput="autoSave()">
+
+                <label>Twitch Channel</label>
+                <input type="text" id="twitch-channel" placeholder="nickname (e.g. shroud)" oninput="autoSave()">
+
+                <label>YouTube Handle / ID</label>
+                <input type="text" id="youtube-handle" placeholder="@PewDiePie or ChannelID" oninput="autoSave()">
+
+                <label>Game Path</label>
+                <input type="text" id="path" placeholder="D:\Games\Cyberpunk 2077" oninput="autoSave()">
+                
+                <button class="btn-start" id="btn-connect" data-i18n="btn_connect">ESTABLISH CONNECTION</button>
+            </div>
+
+            <div style="display: flex; flex-direction: column; flex: 1; min-height: 0;">
+                <div class="section-title" data-i18n="sec_triggers">ACTIVE TRIGGERS</div>
+                <div id="test-buttons-list" class="rules-container"></div>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <div class="section-title" data-i18n="sec_logs">NETWATCH LOGS</div>
+            <div id="console"></div>
+        </div>
+    </div>
+
+    <div id="settings-overlay" class="overlay">
+        <div class="overlay-container">
+            <div class="overlay-header">
+                <h2 style="color: #fcee0a; margin:0;" data-i18n="hdr_rules">RULES EDITOR</h2>
+                <button class="close-btn" id="btn-close-settings" data-i18n="btn_save_close">SAVE & CLOSE</button>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label data-i18n="lbl_language">INTERFACE LANGUAGE</label>
+                <select id="lang-select" onchange="changeLanguage()">
+                    <option value="en">English</option>
+                    <option value="ru">Русский</option>
+                </select>
+            </div>
+
+            <div class="editor-form">
+                <div style="width: 120px;">
+                    <label data-i18n="lbl_type">Type</label>
+                    <select id="rule-type" onchange="updateInputs()">
+                        <option value="exact" data-i18n="opt_exact">Exact Sum</option>
+                        <option value="range" data-i18n="opt_range">Range</option>
+                        <option value="word" data-i18n="opt_word">Keyword</option>
+                    </select>
+                </div>
+                
+                <div style="flex: 1; display: flex; gap: 5px;">
+                    <div style="flex: 1;">
+                        <label id="lbl-v1" data-i18n="lbl_amount">Amount</label>
+                        <input id="val1">
+                    </div>
+                    <div style="flex: 1; display: none;" id="div-v2">
+                        <label data-i18n="lbl_max">Max</label>
+                        <input id="val2">
+                    </div>
+                </div>
+
+                <div style="flex: 2; position: relative;" class="ac-container">
+                    <label data-i18n="lbl_command">Game Command</label>
+                    <input id="cmd-input" data-i18n-ph="ph_command" placeholder="hack:..." autocomplete="off">
+                    <div id="suggestions" class="suggestions"></div>
+                </div>
+
+                <button class="btn-start" style="width: auto; margin: 0; padding: 10px 20px; font-size: 12px;" id="btn-add-rule" data-i18n="btn_add">ADD</button>
+            </div>
+
+            <div class="rule-list-edit" id="edit-list"></div>
+        </div>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+</html>

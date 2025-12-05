@@ -1,0 +1,9 @@
+node_modules
+out
+.vscode
+config.json
+tokens.json
+license.dat
+trial_info.dat
+Releases
+config.json

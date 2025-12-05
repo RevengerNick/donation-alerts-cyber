@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>ACTIVATION REQUIRED</title>
+    <style>
+        body {
+            background-color: #050505; 
+            color: #00f0ff;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0; padding: 20px;
+            height: 100vh; box-sizing: border-box;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            border: 2px solid #ff003c;
+            user-select: none;
+            -webkit-app-region: drag;
+        }
+        h1 { margin: 0; color: #ff003c; text-transform: uppercase; letter-spacing: 3px; font-size: 24px; font-weight: 900; }
+        p { color: #666; font-size: 12px; margin-top: 5px; margin-bottom: 30px; }
+
+        input {
+            width: 100%; padding: 15px; background: #111;
+            border: 1px solid #333; color: #fcee0a;
+            font-family: 'Consolas', monospace; font-size: 16px;
+            text-align: center; letter-spacing: 2px;
+            margin-bottom: 10px; outline: none;
+            -webkit-app-region: no-drag;
+        }
+        input:focus { border-color: #fcee0a; }
+
+        button {
+            width: 100%; padding: 15px; border: none;
+            font-weight: 900; text-transform: uppercase; cursor: pointer;
+            transition: 0.2s; -webkit-app-region: no-drag;
+        }
+
+        #btn-activate {
+            background: #fcee0a; color: #000;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+        }
+        #btn-activate:hover { background: white; }
+
+        .close-app {
+            margin-top: 15px; background: transparent; color: #555; border: 1px solid #333; font-size: 10px; padding: 8px; width: auto;
+        }
+        .close-app:hover { color: #ff003c; border-color: #ff003c; }
+
+        .status { margin-top: 20px; font-size: 12px; height: 15px; text-align: center; font-weight: bold; }
+        .error { color: #ff003c; }
+        .success { color: #00ff9f; }
+    </style>
+</head>
+<body>
+    <h1>ACCESS DENIED</h1>
+    <p>LICENSE KEY REQUIRED FOR ACCESS</p>
+
+    <div style="width: 100%; max-width: 320px;">
+        <input type="text" id="key-input" placeholder="XXXX-XXXX-XXXX-XXXX">
+        <button id="btn-activate" onclick="activate()">ACTIVATE LICENSE</button>
+        
+        <div style="text-align: center;">
+            <button class="close-app" onclick="exitApp()">CLOSE APPLICATION</button>
+        </div>
+
+        <div id="status" class="status"></div>
+    </div>
+
+    <script>
+        const { ipcRenderer } = require('electron');
+
+        function exitApp() {
+            ipcRenderer.send('win-close');
+        }
+
+        async function activate() {
+            const key = document.getElementById('key-input').value;
+            const btn = document.getElementById('btn-activate');
+            const status = document.getElementById('status');
+
+            if (!key) return;
+
+            btn.disabled = true;
+            btn.innerText = "CONNECTING TO NETWATCH...";
+            status.innerText = "";
+
+            const result = await ipcRenderer.invoke('activate-license', key);
+
+            if (result.success) {
+                status.className = 'status success';
+                status.innerText = "ACCESS GRANTED.";
+            } else {
+                status.className = 'status error';
+                status.innerText = result.message || "INVALID KEY";
+                btn.disabled = false;
+                btn.innerText = "ACTIVATE LICENSE";
+            }
+        }
+    </script>
+</body>
+</html>
